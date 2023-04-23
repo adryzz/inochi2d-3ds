@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::{ffi::OsStr, path::PathBuf, process::Command};
 
 fn main() {
     // Open Cargo.toml
@@ -21,12 +21,41 @@ fn main() {
         .and_then(|table| table.get("romfs_dir"))
         .and_then(toml::Value::as_str)
         .unwrap_or("romfs");
-    let romfs_path = PathBuf::from(format!("{manifest_dir}/{romfs_dir_setting}"));
+    let mut romfs_path: PathBuf = PathBuf::from(&manifest_dir);
+    romfs_path.push(PathBuf::from(romfs_dir_setting));
 
     // Check if the romfs path exists so we can compile the module
     if romfs_path.exists() {
         println!("cargo:rustc-cfg=romfs_exists");
     }
+    println!("cargo:rerun-if-changed={}", &manifest_dir);
 
-    println!("cargo:rerun-if-changed={manifest_dir}");
+    let mut asset_dir = PathBuf::from(&manifest_dir);
+    asset_dir.push("src");
+    asset_dir.push("assets");
+
+    for entry in asset_dir.read_dir().unwrap().flatten() {
+        println!("Checking {:?}", entry.path().display());
+        if let Some("pica") = entry.path().extension().and_then(OsStr::to_str) {
+            println!("cargo:rerun-if-changed={}", entry.path().display());
+
+            let mut out_path = PathBuf::from(std::env::var_os("OUT_DIR").unwrap());
+            out_path.push("src");
+            out_path.push("assets");
+            out_path.push(entry.path().with_extension("shbin").file_name().unwrap());
+
+            std::fs::create_dir_all(out_path.parent().unwrap()).unwrap();
+
+            println!("Compiling {:?}", out_path.display());
+
+            let mut cmd = Command::new("picasso");
+            cmd.arg(entry.path()).arg("--out").arg(out_path);
+
+            let status = cmd.spawn().unwrap().wait().unwrap();
+            assert!(
+                status.success(),
+                "Command {cmd:#?} failed with code {status:?}"
+            );
+        }
+    }
 }
