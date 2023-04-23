@@ -1,0 +1,28 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "custom",
+            "name": "Debug executable 'inochi2d-3ds'",
+   
+            "cargo": {
+                "args": [
+                    "3ds",
+                    "run",
+                    "--bin=inochi2d-3ds",
+                    "--package=inochi2d-3ds"
+                ],
+                "filter": {
+                    "name": "inochi2d-3ds",
+                    "kind": "bin"
+                }
+            },
+            "targetCreateCommands": ["target create ${workspaceFolder}/target/armv6k-nintendo-3ds/debug/inochi2d-3ds.elf"],
+            "processCreateCommands": ["gdb-remote 10.0.0.5:4003"]
+        }
+    ]
+}

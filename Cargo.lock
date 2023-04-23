@@ -51,6 +51,28 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
+name = "citro3d"
+version = "0.1.0"
+source = "git+https://github.com/rust3ds/citro3d-rs#2e46d587e81be2596e26ef746e254d068d433bf3"
+dependencies = [
+ "bitflags",
+ "bytemuck",
+ "citro3d-sys",
+ "ctru-rs",
+ "ctru-sys",
+ "libc",
+]
+
+[[package]]
+name = "citro3d-sys"
+version = "0.1.0"
+source = "git+https://github.com/rust3ds/citro3d-rs#2e46d587e81be2596e26ef746e254d068d433bf3"
+dependencies = [
+ "ctru-sys",
+ "libc",
+]
+
+[[package]]
 name = "color_quant"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -328,11 +350,15 @@ checksum = "c40411d0e5c63ef1323c3d09ce5ec6d84d71531e18daed0743fccea279d7deb6"
 name = "inochi2d-3ds"
 version = "0.1.0"
 dependencies = [
+ "citro3d",
+ "citro3d-sys",
  "ctru-rs",
+ "ctru-sys",
  "inox2d",
  "libc",
  "pthread-3ds",
  "shim-3ds",
+ "thiserror",
  "toml",
 ]
 
