@@ -1,13 +1,12 @@
 use citro3d_sys::{
     C3D_Fini, C3D_FrameBegin, C3D_FrameDrawOn, C3D_FrameEnd, C3D_Init, C3D_RenderTarget,
     C3D_RenderTargetClear, C3D_RenderTargetCreate, C3D_RenderTargetSetOutput, C3D_CLEAR_ALL,
-    C3D_DEFAULT_CMDBUF_SIZE, C3D_DEPTHTYPE, C3D_FRAME_SYNCDRAW, GX_TRANSFER_IN_FORMAT,
+    C3D_DEFAULT_CMDBUF_SIZE, C3D_DEPTHTYPE, GX_TRANSFER_IN_FORMAT,
     GX_TRANSFER_OUT_FORMAT, GX_TRANSFER_SCALING,
 };
 use ctru::services::{gfx::TopScreen3D, gspgpu::FramebufferFormat};
 use ctru_sys::{
-    gfx3dSide_t, gfxScreen_t, GFX_LEFT, GFX_RIGHT, GFX_TOP, GPU_DEPTHBUF, GPU_RB_DEPTH24_STENCIL8,
-    GPU_RB_RGBA8, GX_TRANSFER_FMT_RGBA8, GX_TRANSFER_SCALE_XY,
+    gfx3dSide_t, gfxScreen_t, GFX_LEFT, GFX_RIGHT, GFX_TOP, GPU_DEPTHBUF, GPU_RB_DEPTH24_STENCIL8, GX_TRANSFER_FMT_RGBA8, GX_TRANSFER_SCALE_XY,
 };
 
 use std::{
@@ -68,11 +67,11 @@ impl<'a> GPURenderer3D<'a> {
             GFX_RIGHT,
         )?;
 
-        return Ok(Self {
+        Ok(Self {
             top_screen,
             left_target,
             right_target,
-        });
+        })
     }
 
     pub fn clear_all_targets(&mut self) {
@@ -137,7 +136,7 @@ impl RenderTarget {
         // bind target to display
         unsafe { C3D_RenderTargetSetOutput(target, screen, side, flags) };
 
-        Ok(Self { target: target })
+        Ok(Self { target })
     }
 
     pub fn clear(&mut self) {

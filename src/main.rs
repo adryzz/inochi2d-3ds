@@ -3,16 +3,14 @@ mod renderer;
 use ctru::{
     prelude::*,
     services::{
-        gfx::{Screen, TopScreen, TopScreen3D},
+        gfx::{Screen, TopScreen3D},
         gspgpu::FramebufferFormat,
         romfs::RomFS,
     },
 };
 use inox2d::formats::inp::parse_inp;
 use std::{
-    cell::{BorrowError, RefCell, RefMut},
     fs::read,
-    num::TryFromIntError,
 };
 
 use crate::renderer::GPURenderer3D;
@@ -24,7 +22,7 @@ fn main() {
         .expect("Couldn't obtain GFX controller.");
     let mut hid = Hid::init().expect("Couldn't obtain HID controller.");
     let apt = Apt::init().expect("Couldn't obtain APT controller.");
-    let mut soc = Soc::init().expect("Couldn't get SOC controller.");
+    let _soc = Soc::init().expect("Couldn't get SOC controller.");
     let _console = Console::init(gfx.bottom_screen.borrow_mut());
 
     // init RomFS
